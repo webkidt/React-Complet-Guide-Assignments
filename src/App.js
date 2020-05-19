@@ -1,31 +1,48 @@
 import React, { Component } from 'react';
 import './App.css';
-import UserInput from './Components/UserInput';
-import UserOutput from './Components/UserOutput';
+import Validation from './Validation/Validation';
+import Char from './Char/Char';
 
 class App extends Component {
   state = {
-    username: 'Webkidt',
+    userInput: '',
   };
 
-  usernameChangeHandler = (event) => {
-    this.setState({
-      username: event.target.value,
-    });
+  inputChangedHandler = (event) => {
+    this.setState({userInput: event.target.value});
+  };
+
+  deleteCharHandler = (index) => {
+    const text = this.state.userInput.split('');
+    text.splice(index, 1);
+    const updatedText = text.join('');
+
+    this.setState({ userInput: updatedText });
   };
 
   render() {
+    const charList = this.state.userInput.split('').map((ch, index) => {
+      return (
+        <Char
+          key={index}
+          char={ch}
+          click={() => this.deleteCharHandler(index)}
+        />
+      );
+    });
+
     return (
       <div className='App'>
-        <h1>Assignment 1</h1>
-        <UserInput
-          changed={this.usernameChangeHandler}
-          username={this.state.username}
+        <h1>Assignment 2</h1>
+        <input
+          type='text'
+          onChange={this.inputChangedHandler}
+          value={this.state.userInput}
         />
-        <UserOutput username={this.state.username} />
-        <UserOutput username={this.state.username} />
-        <UserOutput username={this.state.username} />
-        <UserOutput username={this.state.username} />
+        <p>{this.state.userInput}</p>
+        <p>Number of Characters: {this.state.userInput.length} </p>
+        <Validation length={this.state.userInput.length} />
+        {charList}
       </div>
     );
   }
